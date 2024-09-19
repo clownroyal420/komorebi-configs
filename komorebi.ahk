@@ -73,6 +73,7 @@ Komorebic(cmd) {
 ; Resize with mouse
 #RButton::          ; Should be safe to change the modifier key as desired
 {
+
     MouseGetPos , , &WindowID
     Winactivate(WindowID)
     ResizeWindow()
@@ -83,14 +84,9 @@ Komorebic(cmd) {
 {
     MouseGetPos , , &WindowID
     Winactivate(WindowID)
-    If GetKeyState("Alt", "P")
-    {                                           ; It seems that using Alt as the modifier will interfere
-        Send "{Blind}{Alt down}{Space}{Alt up}" ; with the invocation of the window menu.
-        Send "{Blind}{m}"                       ; As such, we use Blind mode.
-    } else {
-        Send "!{Space}"
-        Send "{m}"
-    }
+    WM_SYSCOMMAND := 0x0112
+    SC_MOVE := 0xF010
+    PostMessage WM_SYSCOMMAND, SC_MOVE, 0, , "A"
     Send "{Down}"
     Keywait "LButton"
     Send "{LButton}"
@@ -112,14 +108,9 @@ ResizeWindow()  ; A little sum sum to hold us over until AltSnap is updated to w
     Top := ( ( CursorPinY ) / WindowHeight ) < ( Threshold )
     Bottom := ( ( CursorPinY ) / WindowHeight ) > ( 1.00 - Threshold )
 
-    If GetKeyState("Alt", "P")
-    {                                           ; It seems that using Alt as the modifier will interfere
-        Send "{Blind}{Alt down}{Space}{Alt up}" ; with the invocation of the window menu.
-        Send "{Blind}{s}"                       ; As such, we use Blind mode.
-    } else {
-        Send "!{Space}"
-        Send "{s}"
-    }
+    WM_SYSCOMMAND := 0x0112
+    SC_SIZE := 0xF000
+    PostMessage WM_SYSCOMMAND, SC_SIZE, 0, , "A"
 
     If Left
     {

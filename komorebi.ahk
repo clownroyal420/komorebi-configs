@@ -84,9 +84,8 @@ Komorebic(cmd) {
     MouseGetPos , , &WindowID
     Winactivate(WindowID)
     If GetKeyState("Alt", "P")
-    {
-        Send "{Blind}{Alt down}{Space}{Alt up}" ; It seems that using Alt as the modifier will interfere
-        Sleep 5                                 ; with the invocation of the window menu.
+    {                                           ; It seems that using Alt as the modifier will interfere
+        Send "{Blind}{Alt down}{Space}{Alt up}" ; with the invocation of the window menu.
         Send "{Blind}{m}"                       ; As such, we use Blind mode.
     } else {
         Send "!{Space}"
@@ -114,9 +113,8 @@ ResizeWindow()  ; A little sum sum to hold us over until AltSnap is updated to w
     Bottom := ( ( CursorPinY ) / WindowHeight ) > ( 1.00 - Threshold )
 
     If GetKeyState("Alt", "P")
-    {
-        Send "{Blind}{Alt down}{Space}{Alt up}" ; It seems that using Alt as the modifier will interfere
-        Sleep 5                                 ; with the invocation of the window menu.
+    {                                           ; It seems that using Alt as the modifier will interfere
+        Send "{Blind}{Alt down}{Space}{Alt up}" ; with the invocation of the window menu.
         Send "{Blind}{s}"                       ; As such, we use Blind mode.
     } else {
         Send "!{Space}"

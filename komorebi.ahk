@@ -84,9 +84,9 @@ Komorebic(cmd) {
 {
     MouseGetPos , , &WindowID
     Winactivate(WindowID)
-    WM_SYSCOMMAND := 0x0112
-    SC_MOVE := 0xF010
-    PostMessage WM_SYSCOMMAND, SC_MOVE, 0, , "A"
+    WM_SYSCOMMAND := 0x0112                         ; This is a cleaner way to invoke the System Menu
+    SC_MOVE := 0xF010                               ; than sending an Alt+Space followed by m.
+    PostMessage WM_SYSCOMMAND, SC_MOVE, 0, , "A"    ; I like it.
     Send "{Down}"
     Keywait "LButton"
     Send "{LButton}"
@@ -108,9 +108,9 @@ ResizeWindow()  ; A little sum sum to hold us over until AltSnap is updated to w
     Top := ( ( CursorPinY ) / WindowHeight ) < ( Threshold )
     Bottom := ( ( CursorPinY ) / WindowHeight ) > ( 1.00 - Threshold )
 
-    WM_SYSCOMMAND := 0x0112
-    SC_SIZE := 0xF000
-    PostMessage WM_SYSCOMMAND, SC_SIZE, 0, , "A"
+    WM_SYSCOMMAND := 0x0112                         ; This is a cleaner way to invoke the System Menu
+    SC_SIZE := 0xF000                               ; than sending an Alt+Space followed by s.
+    PostMessage WM_SYSCOMMAND, SC_SIZE, 0, , "A"    ; I like it.
 
     If Left
     {

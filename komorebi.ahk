@@ -386,7 +386,8 @@ KeyStatus()
     msg := "" (GetKeyState("ScrollLock", "T") ? "Scroll Lock is ON`n" : "")
     msg := msg (GetKeyState("CapsLock", "T") ? "CAPS Lock is ON `n" : "")
     msg := msg (GetKeyState("Numlock", "T") ? "" : "NUM Lock is OFF")
-    if (GetKeyState("ScrollLock", "T") or GetKeyState("CapsLock", "T") or !GetKeyState("NumLock", "T")) {
+    msg := msg (NormalMode ? "hjkl arrowing enabled" : "")
+    if ((GetKeyState("ScrollLock", "T") or GetKeyState("CapsLock", "T") or !GetKeyState("NumLock", "T") or NormalMode) and !GetKeyState("LButton", "P")) {
         ToolTip msg
     } else {
         ToolTip

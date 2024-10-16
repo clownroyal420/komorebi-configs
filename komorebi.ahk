@@ -332,6 +332,7 @@ send "^v"
 
 ; NumLock/CapsLock/ScrollLock Indication {{{
 ~ScrollLock::SetTimer KeyStatus
+#!k::SetScrollLockState not GetKeyState("ScrollLock", "T")          ; Useful to toggle ScrollLock without a ScrollLock Key
 ~CapsLock::SetTimer KeyStatus
 ~NumLock::SetTimer KeyStatus
 global NormalMode := false                                          ; "NormalMode" is what we'll call global hjkl arrowing.

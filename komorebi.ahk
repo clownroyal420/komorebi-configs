@@ -31,6 +31,7 @@ WinSetTransparent 0, "ahk_class Shell_TrayWnd"
 
 #c::Komorebic("close")
 #m::Komorebic("minimize")
+#+m::Komorebic("manage")
 ; #q::Run "C:\Program Files\WezTerm\wezterm-gui.exe"    ; Including the Windows Essentials version of this
 
 ; Focus windows

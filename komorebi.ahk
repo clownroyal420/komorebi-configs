@@ -21,6 +21,8 @@ Komorebic(cmd) {
     RunWait(format("komorebic.exe {}", cmd), , "Hide")
 }
 
+WinSetTransparent 0, "ahk_class Shell_TrayWnd"
+
 #g::
 {
     Komorebic("gui")

@@ -289,6 +289,17 @@ d::Send "{Up}"
 !d::Send "{blind}{Up}"
 #HotIf ; }}}
 
+~#Space::       ; Powertoys Run Wrapper {{{
+{
+    WinWait ("ahk_exe PowerToys.PowerLauncher.exe")         ; Upon invocation of PowerToys Run,
+    If WinActive("ahk_exe PowerToys.PowerLauncher.exe")     ; hover the mouse over the prompt
+    {                                                       ; so we don't accidentally unfocus it.
+        WinGetPos &PTRunX, &PTRunY, &PTRunW, &PTRunH, "PowerToys.PowerLauncher"
+        MouseMove PTRunW - 10, 10
+    }
+}
+; Powertoys Run Wrapper }}}
+
 #HotIf WinActive("ahk_exe PowerToys.PowerLauncher.exe")     ; Powertoys Run hjkl arrowing binds {{{
 ^h::Send "{Up}"
 ^j::Send "{Down}"

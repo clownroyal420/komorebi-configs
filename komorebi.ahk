@@ -334,6 +334,34 @@ send "^v"
 ~ScrollLock::SetTimer KeyStatus
 ~CapsLock::SetTimer KeyStatus
 ~NumLock::SetTimer KeyStatus
+global NormalMode := false                                          ; "NormalMode" is what we'll call global hjkl arrowing.
+#i::                                                                ; "NormalMode" will be toggled with feedback included
+{                                                                   ; with our key KeyStatus indicator.
+    global NormalMode := not NormalMode
+    SetTimer KeyStatus
+}
+#HotIf NormalMode
+h::Send "{Left}"        ; Basic arrowing with hjkl.
+j::Send "{Down}"
+k::Send "{Up}"
+l::Send "{Right}"
+^h::Send "^{Left}"      ; Helpful for moving the cursor by word.
+^j::Send "^{Down}"
+^k::Send "^{Up}"
+^l::Send "^{Right}"
+^+h::Send "^+{Left}"    ; Helpful for highlighting text by word.
+^+j::Send "^+{Down}"
+^+k::Send "^+{Up}"
+^+l::Send "^+{Right}"
+!h::Send "!{Left}"      ; Helpful for forward/backward through browser history.
+!j::Send "!{Down}"
+!k::Send "!{Up}"
+!l::Send "!{Right}"
++h::Send "+{Left}"      ; Helpful for highlighting text.
++j::Send "+{Down}"
++k::Send "+{Up}"
++l::Send "+{Right}"
+#HotIf
 
 ~Esc::          ; Set CAPS/NUM/SCROLL Lock key states back to what we like (CAPS off, SCROLL off, NUM on).
 {

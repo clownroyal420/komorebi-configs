@@ -26,17 +26,6 @@
   "transparency": true,
   "transparency_alpha": 245,
   "resize_delta": 100,
-  "monitors": [
-    {
-      "workspaces": [
-        { "name": "I", "layout": "UltrawideVerticalStack" },
-        { "name": "II", "layout": "UltrawideVerticalStack" },
-        { "name": "III", "layout": "UltrawideVerticalStack" },
-        { "name": "IV", "layout": "UltrawideVerticalStack" },
-        { "name": "V", "layout": "UltrawideVerticalStack" }
-      ]
-    }
-  ],
   "stackbar": {
     "height": 20,
     "lable": "Title",
@@ -57,30 +46,12 @@
   ],
   "float_rules": [
     {
-      "kind": "Title",
-      "id": "Print",
+      "kind": "Class",
+      "id": "TeamsWebView",
       "matching_strategy": "Equals"
-    },
-    {
-      "kind": "Title",
-      "id": "Document Properties",
-      "matching_strategy": "Equals"
-    },
-    {
-      "kind": "Title",
-      "id": "Rename Document",
-      "matching_strategy": "Equals"
-    },
-    {
-      "kind": "Title",
-      "id": "Optimize PDF",
-      "matching_strategy": "Equals"
-    },
-    {
-      "kind": "Title",
-      "id": "Extract Pages",
-      "matching_strategy": "Equals"
-    },
+    }
+  ],
+  "float_rules": [
     {
       "kind": "Title",
       "id": "LibreWolf - Choose User Profile",
@@ -89,6 +60,16 @@
     {
       "kind": "Class",
       "id": "VbaWindow",
+      "matching_strategy": "Equals"
+    },
+    {
+      "kind": "Class",
+      "id": "UIX:Window",
+      "matching_strategy": "StartsWith"
+    },
+    {
+      "kind": "Title",
+      "id": "Group Rooms",
       "matching_strategy": "Equals"
     }
   ]

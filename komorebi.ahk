@@ -1,5 +1,6 @@
 #Requires AutoHotkey v2.0.2
 #SingleInstance Force
+TraySetIcon("komologo.ico")
 
 ; Reloading and Exiting the script {{{
 ~Home:: ; Doubletapping Home will reload the script. {{{

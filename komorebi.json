@@ -72,5 +72,12 @@
       "id": "Group Rooms",
       "matching_strategy": "Equals"
     }
+  ],
+  "tray_and_multi_window_applications": [
+    {
+        "kind": "Class",
+        "id": "AutoHotkey",
+        "matching_strategy": "Equals"
+    }
   ]
 }

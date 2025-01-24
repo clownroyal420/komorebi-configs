@@ -15,6 +15,48 @@
 #End::ExitApp   ; Win-End will terminate the script.
 ; }}}
 
+; Focus-Follows-Mouse and Mouse-Follows-Focus {{{
+global ffm := true          ; Set this to the desired default setting.
+global ffmDelay := 100      ; Focus-Follows-Mouse delay in milliseconds
+global mff := true
+SetMFF( mff )
+SetMFF( EnableDisable )
+{
+    global mff := EnableDisable
+    mff_text := mff ? "enable" : "disable"
+    Komorebic(Format("mouse-follows-focus {}", mff_text))
+}
+InitialSetFFM( ffm )
+InitialSetFFM( EnableDisable )
+{
+    ProcessWait("komorebi.exe")
+    SetFFM( EnableDisable )
+}
+SetFFM( EnableDisable )
+{
+    global ffm := EnableDisable
+    DllCall("SystemParametersInfoW", "UInt", 0x1001, "UInt", 0, "Ptr", ffm)
+    DllCall("SystemParametersInfoW", "UInt", 0x2003, "UInt", 0, "Ptr", ffmDelay)
+}
+~Ctrl::
+{
+    global ffm
+    ffmlv := ffm
+    SetFFM(false)
+    KeyWait "Ctrl"
+    SetFFM(ffmlv)
+}
+; Focus-Follows-Mouse and Mouse-Follows-Focus }}}
+
+; On-Exit {{{
+OnExit(ExitFunction)
+ExitFunction(ExitReason, ExitCode)
+{
+    SetFFM( false )
+    SetMFF( false )
+}
+; On-Exit }}}
+
 ; Main binds to Komorebic {{{
 
 Komorebic(cmd) {
@@ -73,7 +115,7 @@ WinSetTransparent 0, "ahk_class Shell_TrayWnd"
 #^WheelUp::Komorebic("resize-axis vertical increase")
 #^WheelDown::Komorebic("resize-axis vertical decrease")
 
-; Resize with mouse
+; Resize with mouse.
 #RButton::          ; Should be safe to change the modifier key as desired
 {
 
@@ -289,16 +331,37 @@ d::Send "{Up}"
 !d::Send "{blind}{Up}"
 #HotIf ; }}}
 
-~#Space::       ; Powertoys Run Wrapper {{{
+; Runner {{{
+#HotIf !WinExist("Flow.Launcher")
+#Space::FlowLauncher("open")
+#HotIf WinExist("Flow.Launcher")
+#Space::FlowLauncher("close")
+#HotIf
+FlowLauncher( action )
 {
-    WinWait ("ahk_exe PowerToys.PowerLauncher.exe")         ; Upon invocation of PowerToys Run,
-    If WinActive("ahk_exe PowerToys.PowerLauncher.exe")     ; hover the mouse over the prompt
-    {                                                       ; so we don't accidentally unfocus it.
-        WinGetPos &PTRunX, &PTRunY, &PTRunW, &PTRunH, "PowerToys.PowerLauncher"
-        MouseMove PTRunW - 10, 10
+    if StrCompare( action, "open" )=0
+    {
+        global ffm
+        ffmlv := ffm
+        SetFFM(false)
+        Run( EnvGet("HOMEPATH") '\AppData\Local\FlowLauncher\Flow.Launcher.exe')
+        WinWait("Flow.Launcher")
+        WinWaitNotActive("ahk_exe Flow.Launcher.exe")
+        SetFFM(ffmlv)
+        Return
+    }
+    if StrCompare( action, "close")=0
+    {
+        if !WinActive("ahk_exe Flow.Launcher.exe")
+        {
+            WinActivate("ahk_exe Flow.Launcher.exe")
+        } else {
+            Send "{Escape}"
+        }
+        Return
     }
 }
-; Powertoys Run Wrapper }}}
+; Runner }}}
 
 #HotIf WinActive("ahk_exe PowerToys.PowerLauncher.exe")     ; Powertoys Run hjkl arrowing binds {{{
 ^h::Send "{Up}"
@@ -322,12 +385,54 @@ send "^v"
 ; Paste without formatting }}}
 
 ; Toggle Taskbar (only works on main monitor) {{{
-#F1::WinSetTransparent 255, "ahk_class Shell_TrayWnd"   ; Win+F1 to show taskbar 
-#F2::WinSetTransparent 0, "ahk_class Shell_TrayWnd"     ; Win+F2 to hide taskbar
+#F1::
+{
+    TBVisible := !(WinGetTransparent("ahk_class Shell_TrayWnd")/255)
+    WinSetTransparent TBVisible*255, "ahk_class Shell_TrayWnd"   ; Win+F1 to show taskbar
+}
+#F2::
+{
+    if ProcessExist("yasb.exe") {
+        RunWait('yasbc.exe stop',,"Hide")
+    } else {
+        RunWait('yasbc.exe start',,"Hide")
+    }
+}
 
 #HotIf !WinExist("ahk_class TopLevelWindowForOverflowXamlIsland")   ; Usually I like to have the taskbar hidden.
-    ~#B::Send "{Space}"                                             ; Win-B is the standard shortcut to select the system tray overflow items.
-#HotIf                                                              ; By pinning zero items other than wifi & such, we can get to our system tray apps with WIN-B
+<#b::                                                               ; Win-B is the standard shortcut to select the system tray overflow items.
+{                                                                   ; By pinning zero items other than wifi & such, we can get to our system tray apps with WIN-B
+    global mff
+    global ffm
+    ffm_LV := ffm
+    mff_LV := mff
+    SetFFM(false)
+    SetMFF(false)
+    Send "{Blind}{LWin down}{b}{LWin up}{Space}"
+    WinWaitNotActive("System tray overflow window.")
+    KeyWait "LWin"
+    KeyWait "b"
+    SetMFF(mff_LV)
+    SetFFM(ffm_LV)
+}
+>#b::                                                               ; Win-B is the standard shortcut to select the system tray overflow items.
+{                                                                   ; By pinning zero items other than wifi & such, we can get to our system tray apps with WIN-B
+    global mff
+    global ffm
+    ffm_LV := ffm
+    mff_LV := mff
+    SetFFM(false)
+    SetMFF(false)
+    Send "{Blind}{LWin down}{b}{LWin up}{Space}"
+    WinWaitNotActive("System tray overflow window.")
+    KeyWait "RWin"
+    KeyWait "b"
+    SetMFF(mff_LV)
+    SetFFM(ffm_LV)
+}
+#HotIf WinExist("ahk_class TopLevelWindowForOverflowXamlIsland")
+#b::Send "{Esc}"
+#HotIf
 ; Toggle Taskbar }}}
 
 ; NumLock/CapsLock/ScrollLock Indication {{{

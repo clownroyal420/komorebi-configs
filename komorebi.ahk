@@ -264,18 +264,18 @@ switch ItemPos {
 
 ; Functions used to Cycle/Launch Windows {{{
 
-#e::cycle_windows('explorer.exe','ahk_class CabinetWClass ahk_exe explorer.exe')
+#e::Cycle_or_Launch('explorer.exe','ahk_class CabinetWClass ahk_exe explorer.exe')
 #+e::run('explorer')
-#q::cycle_windows("wt.exe","ahk_exe WindowsTerminal.exe")
+#q::Cycle_or_Launch("wt.exe","ahk_exe WindowsTerminal.exe")
 #+q::run('wt.exe')
-; #q::cycle_windows('wezterm-gui.exe','org.wezfurlong.wezterm')
+; #q::Cycle_or_Launch('wezterm-gui.exe','org.wezfurlong.wezterm')
 ; #+q::run('wezterm-gui.exe')
-; #q::cycle_windows('alacritty.exe','Window Class'," --working-directory " EnvGet("HOMEPATH"))
+; #q::Cycle_or_Launch('alacritty.exe','Window Class'," --working-directory " EnvGet("HOMEPATH"))
 ; #+q::run("alacritty --working-directory " EnvGet("HOMEPATH"))
-#w::cycle_windows("`"C:\Program Files\LibreWolf\librewolf.exe`" -P","ahk_exe librewolf.exe")
+#w::Cycle_or_Launch("`"C:\Program Files\LibreWolf\librewolf.exe`" -P","ahk_exe librewolf.exe")
 #+w::Run("`"C:\Program Files\LibreWolf\librewolf.exe`" -P")
 
-cycle_windows(command,window) ; {{{
+Cycle_or_Launch(command,window) ; {{{
 {
     if WinActive(window) {          ; If the specified window is active, 
         WinActivateBottom(window)   ; move to bottom and 

@@ -39,13 +39,17 @@ SetFFM( EnableDisable )
     DllCall("SystemParametersInfoW", "UInt", 0x1001, "UInt", 0, "Ptr", ffm)
     DllCall("SystemParametersInfoW", "UInt", 0x2003, "UInt", 0, "Ptr", ffmDelay)
 }
-~Ctrl::
+~Ctrl::     ; Hold down Ctrl to suspend Focus-Follows-Mouse and Mouse-Follows-Focus
 {
     global ffm
+    global mff
     ffmlv := ffm
+    mfflv := mff
     SetFFM(false)
+    SetMFF(false)
     KeyWait "Ctrl"
     SetFFM(ffmlv)
+    SetMFF(mfflv)
 }
 ; Focus-Follows-Mouse and Mouse-Follows-Focus }}}
 
@@ -260,56 +264,33 @@ switch ItemPos {
 
 ; Functions used to Cycle/Launch Windows {{{
 
-#e::cycle_windows('explorer.exe','CabinetWClass')
+#e::cycle_windows('explorer.exe','ahk_class CabinetWClass ahk_exe explorer.exe')
 #+e::run('explorer')
-#q::cycle_windows('wezterm-gui.exe','org.wezfurlong.wezterm')
-#+q::run('wezterm-gui.exe')
+#q::cycle_windows("wt.exe","ahk_exe WindowsTerminal.exe")
+#+q::run('wt.exe')
+; #q::cycle_windows('wezterm-gui.exe','org.wezfurlong.wezterm')
+; #+q::run('wezterm-gui.exe')
 ; #q::cycle_windows('alacritty.exe','Window Class'," --working-directory " EnvGet("HOMEPATH"))
 ; #+q::run("alacritty --working-directory " EnvGet("HOMEPATH"))
-#w::cycle_windows_exe_only('librewolf.exe',"`"C:\Program Files\LibreWolf\librewolf.exe`" -P")
+#w::cycle_windows("`"C:\Program Files\LibreWolf\librewolf.exe`" -P","ahk_exe librewolf.exe")
 #+w::Run("`"C:\Program Files\LibreWolf\librewolf.exe`" -P")
 
-cycle_windows(exe,class,args:="") { ; {{{
-
-    if WinActive('ahk_class' class) {           ; If the specified window is active, 
-        WinActivateBottom('ahk_class' class)    ; move to bottom and 
-        WinActivate('ahk_class' class)          ; focus the new highest rank window of specified ahk_class
+cycle_windows(command,window) ; {{{
+{
+    if WinActive(window) {          ; If the specified window is active, 
+        WinActivateBottom(window)   ; move to bottom and 
+        WinActivate(window)         ; focus the new highest rank window of specified ahk_class
     }
 
-    if !WinExist('ahk_class' class) {       ; checks if an app is already running
+    if !WinExist(window) {          ; checks if an app is already running
         
-        Run(exe args)                            ; IF NOT, open it.
-        ,WinWait('ahk_class' class)         ; After opening, wait for it to open.
-        WinActivate('ahk_class' class)      ; Bring it to the front and in focus.
+        Run(command)                ; IF NOT, open it.
+        ,WinWait(window)            ; After opening, wait for it to open.
+        WinActivate(window)         ; Bring it to the front and in focus.
 
-        } else {
-            WinActivate('ahk_class' class)  ; If the window of specified ahk_class exists then focus it.
-        }
-} ; }}}
-cycle_windows_exe_only(prog,exe_path:=prog) { ; {{{
-    ; note: exe_path is optional. By default, exe_path will just be the specified exe. This exe_path argument
-    ;       can be left blank for cases when the executable of interest is in the PATH variable. If not, then
-    ;       exe_path needs to be specified as the full path to the executable.
-    exe := prog
-    id := 'ahk_exe' exe
-
-    ; If the specified window is active, move to bottom and focus the new highest rank window of specified ahk_class
-    if WinActive(id) {
-        WinActivateBottom(id)
-        WinActivate(id)
+    } else {
+        WinActivate(window)         ; If the window of specified ahk_class exists then focus it.
     }
-    
-    ; checks if an app is already running
-    if !WinExist(id) {
-        
-        Run(exe_path)                   ; IF window of specified exe does not exist then we launch it and 
-        ,WinWait(id)                    ; wait for it to exist.
-
-        WinActivate(id)                 ; Then we focus the window of specified exe.
-
-        } else {
-            WinActivate(id)             ; If the window of specified ahk_class already exists then focus it.
-        }
 } ; }}}
 ; Functions used to Cycle/Launch Windows }}}
 
